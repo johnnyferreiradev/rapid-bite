@@ -1,20 +1,37 @@
 import { useState } from "react";
-import { View, Text, Button } from "react-native";
+import { View, FlatList } from "react-native";
+
+import { CategoryButton } from "@/components/category";
+import { Header } from "@/components/header";
+
+import { CATEGORIES } from "@/utils/data/products";
 
 export default function Home() {
-  const [showMessage, setShowMessage] = useState(false);
+  const [category, setCategory] = useState(CATEGORIES[0]);
+
+  const handleCategorySelect = (selectedCategory: string) => {
+    setCategory(selectedCategory);
+  };
 
   return (
-    <View className="flex-1 justify-center items-center">
-      {showMessage && (
-        <Text className="text-white text-2xl mb-2">
-          Booooraaaaaaa!!!
-        </Text>
-      )}
-      <Button
-        title={showMessage ? "Fechar" : "Clique aqui!"}
-        onPress={() => setShowMessage(!showMessage)}
-      ></Button>
+    <View className="flex-1">
+      <Header title="Faça seu pedido" cardQuantityItems={5} />
+
+      <FlatList
+        data={CATEGORIES}
+        keyExtractor={(item) => item}
+        renderItem={({ item }) => (
+          <CategoryButton
+            title={item}
+            isSelected={category === item}
+            onPress={() => handleCategorySelect(item)}
+          />
+        )}
+        horizontal
+        className="max-h-10 mt-5"
+        contentContainerStyle={{ gap: 12, paddingHorizontal: 20 }}
+        showsHorizontalScrollIndicator={false}
+      />
     </View>
   );
 }
